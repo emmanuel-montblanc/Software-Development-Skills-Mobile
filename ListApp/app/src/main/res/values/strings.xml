@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">List App</string>
+
+    <string-array name="items">
+        <item>peach</item>
+        <item>tomato</item>
+        <item>banana</item>
+    </string-array>
+
+    <string-array name="prices">
+        <item>0.99€</item>
+        <item>0.50€</item>
+        <item>1.20€</item>
+    </string-array>
+
+    <string-array name="descriptions">
+        <item> Fresh peaches from Italia</item>
+        <item> Fresh tomatoes from Spain</item>
+        <item> Fresh bananas from somewhere</item>
+    </string-array>
+</resources>
