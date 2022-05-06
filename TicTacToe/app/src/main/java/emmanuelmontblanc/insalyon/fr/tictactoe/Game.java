@@ -7,47 +7,50 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
-
 import java.util.Arrays;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Game extends AppCompatActivity implements GameAdapter.ItemClickListener{
 
     GameAdapter adapter;
     TextView turnTextView;
-    TextView gametypeTextView;
+    TextView gameTypeTextView;
+    RecyclerView recyclerView;
+
     int turn;
     int[][] gameState;
     int end;
+    int gameType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
-        gametypeTextView = (TextView) findViewById(R.id.gametypeTextView);
+        gameTypeTextView = (TextView) findViewById(R.id.gametypeTextView);
         turnTextView = (TextView) findViewById(R.id.turnTextView);
 
         gameState = new int[][] { {-1,-1,-1}, {-1,-1,-1}, {-1,-1,-1}};
         turn = 0;
         end = -1;
-        turnTextView.setText("Player 1");
 
         Intent in  = getIntent();
-        int gametype = in.getIntExtra("emmanuelmontblanc.insalyon.fr.GAMETYPE", -1);
+        gameType = in.getIntExtra("emmanuelmontblanc.insalyon.fr.GAMETYPE", -1);
 
-        if (gametype > -1){
-            if (gametype == 0){
-                gametypeTextView.setText("Player Vs Player");
+        if (gameType > -1){
+            if (gameType == 0){
+                gameTypeTextView.setText("Player Vs Player");
+                turnTextView.setText("Player 1");
+
             } else {
-                gametypeTextView.setText("Player vs IA");
+                gameTypeTextView.setText("Player vs IA");
+                turnTextView.setText("");
+
             }
         }
 
@@ -55,7 +58,7 @@ public class Game extends AppCompatActivity implements GameAdapter.ItemClickList
         int[] data = new int[9];
         Arrays.fill(data, R.drawable.blank);
 
-        RecyclerView recyclerView = findViewById(R.id.gameRecyclerView);
+        recyclerView = findViewById(R.id.gameRecyclerView);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.HORIZONTAL));
@@ -67,12 +70,27 @@ public class Game extends AppCompatActivity implements GameAdapter.ItemClickList
 
     @Override
     public void onItemClick(View view, int position) {
+        int col = position / 3;
+        int row = position % 3;
+
+        makePlay(view, col, row);
+
+        if(gameType != 0){
+            int[] iaPlay = getRandomPlay();
+            if (iaPlay[0] > -1){
+                turnTextView.setText("ia play : " + iaPlay[0] + " " +iaPlay[1]);
+                GameAdapter.ViewHolder iaViewholder = (GameAdapter.ViewHolder) recyclerView.findViewHolderForAdapterPosition(iaPlay[0]*3+iaPlay[1]);
+                View iaView = iaViewholder.itemView.findViewById(R.id.caseImageView);
+                makePlay(iaView, iaPlay[0], iaPlay[1]);
+            }
+        }
+
+    }
+
+    public void makePlay(View view, int col, int row){
 
         if(end == -1) {
             ImageView caseImageView = view.findViewById(R.id.caseImageView);
-
-            int col = position / 3;
-            int row = position % 3;
 
             if (gameState[col][row] == -1) {
                 if (turn == 0) {
@@ -88,10 +106,10 @@ public class Game extends AppCompatActivity implements GameAdapter.ItemClickList
                 if (end == -1) {
                     if (turn == 0) {
                         turn = 1;
-                        turnTextView.setText("Player 2");
+                        if(gameType == 0) turnTextView.setText("Player 2");
                     } else {
                         turn = 0;
-                        turnTextView.setText("Player 1");
+                        if(gameType == 0) turnTextView.setText("Player 1");
                     }
                 } else {
                     Toast.makeText(this, "end !" + end, Toast.LENGTH_SHORT).show();
@@ -162,6 +180,17 @@ public class Game extends AppCompatActivity implements GameAdapter.ItemClickList
         }
 
         return end;
+    }
+
+    public int[] getRandomPlay(){
+        if (end == -1) {
+            while (true) {
+                int i = ThreadLocalRandom.current().nextInt(0, 3);
+                int j = ThreadLocalRandom.current().nextInt(0, 3);;
+                if (gameState[i][j] == -1) return new int[]{i, j};
+            }
+        }
+        return new int[]{-1, -1};
     }
 
 }
