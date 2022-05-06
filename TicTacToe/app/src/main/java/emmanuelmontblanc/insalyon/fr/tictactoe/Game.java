@@ -28,13 +28,25 @@ public class Game extends AppCompatActivity implements GameAdapter.ItemClickList
     int gameType;
     int round;
 
+    String pvp;
+    String pvIA;
+    String player1;
+    String player2;
+    String invalid;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
-        gameTypeTextView = (TextView) findViewById(R.id.gametypeTextView);
-        turnTextView = (TextView) findViewById(R.id.turnTextView);
+        gameTypeTextView = findViewById(R.id.gametypeTextView);
+        turnTextView = findViewById(R.id.turnTextView);
+
+        pvp = getResources().getString(R.string.pvp);
+        pvIA = getResources().getString(R.string.pvIA);
+        player1 = getResources().getString(R.string.player1);
+        player2 = getResources().getString(R.string.player2);
+        invalid = getResources().getString(R.string.invalid);
 
         gameState = new int[][] { {-1,-1,-1}, {-1,-1,-1}, {-1,-1,-1}};
         turn = 0;
@@ -44,27 +56,30 @@ public class Game extends AppCompatActivity implements GameAdapter.ItemClickList
         Intent in  = getIntent();
         gameType = in.getIntExtra("emmanuelmontblanc.insalyon.fr.GAMETYPE", -1);
 
+        // Checks the type of game
         if (gameType > -1){
             if (gameType == 0){
-                gameTypeTextView.setText("Player Vs Player");
-                turnTextView.setText("Player 1");
+                gameTypeTextView.setText(pvp);
+                turnTextView.setText(player1);
 
             } else {
-                gameTypeTextView.setText("Player vs IA");
+                gameTypeTextView.setText(pvIA);
                 turnTextView.setText("");
 
             }
         }
 
-
+        // create data to fill the grid with blank image at first
         int[] data = new int[9];
         Arrays.fill(data, R.drawable.blank);
 
+        // Instantiate the recyclerView with a grid of 3 columns
         recyclerView = findViewById(R.id.gameRecyclerView);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.HORIZONTAL));
 
+        // Set the adapter
         adapter = new GameAdapter(this, data);
         adapter.setClickListener(this);
         recyclerView.setAdapter(adapter);
@@ -72,15 +87,20 @@ public class Game extends AppCompatActivity implements GameAdapter.ItemClickList
 
     @Override
     public void onItemClick(View view, int position) {
+
+        // Get the column and row corresponding to the position
         int col = position / 3;
         int row = position % 3;
 
+        // Make the play corresponding
         makePlay(view, col, row);
 
+        // If the game is vs IA, find a random valid play and plays it
         if(gameType != 0){
             int[] iaPlay = getRandomPlay();
             if (iaPlay[0] > -1){
-                turnTextView.setText("ia play : " + iaPlay[0] + " " +iaPlay[1]);
+
+                // Get the viewholder corresponding to the case of the chosen play, then the view inside the viewholder
                 GameAdapter.ViewHolder iaViewholder = (GameAdapter.ViewHolder) recyclerView.findViewHolderForAdapterPosition(iaPlay[0]*3+iaPlay[1]);
                 View iaView = iaViewholder.itemView.findViewById(R.id.caseImageView);
                 makePlay(iaView, iaPlay[0], iaPlay[1]);
@@ -94,6 +114,7 @@ public class Game extends AppCompatActivity implements GameAdapter.ItemClickList
         if(end == -1) {
             ImageView caseImageView = view.findViewById(R.id.caseImageView);
 
+            // Check that the play is valid, then draw either a cross or a circle and change the value in gameState
             if (gameState[col][row] == -1) {
                 if (turn == 0) {
                     caseImageView.setImageResource(R.drawable.cross);
@@ -103,28 +124,37 @@ public class Game extends AppCompatActivity implements GameAdapter.ItemClickList
                     gameState[col][row] = 1;
                 }
 
+                // After the play, increase the round counter and check if the game ended
                 round += 1;
                 end = checkEnd(col, row, turn);
 
+                // If the game didn't end, change the turn
                 if (end == -1) {
                     if (turn == 0) {
                         turn = 1;
-                        if(gameType == 0) turnTextView.setText("Player 2");
+                        if(gameType == 0) turnTextView.setText(player2);
                     } else {
                         turn = 0;
-                        if(gameType == 0) turnTextView.setText("Player 1");
+                        if(gameType == 0) turnTextView.setText(player1);
                     }
                 } else {
+                    // if it did end go to victory screen
                     Toast.makeText(this, "end !" + end, Toast.LENGTH_SHORT).show();
                 }
 
             } else {
-                Toast.makeText(this, "Invalid play !", Toast.LENGTH_SHORT).show();
+                // If the play is invalid a small message pop up and the play isn't made
+                Toast.makeText(this, invalid, Toast.LENGTH_SHORT).show();
             }
         }
     }
 
     public int checkEnd(int col, int row, int turn){
+        // returns :
+        // -1 if the game isn't ended
+        // 0 if player 1 won
+        // 1 if player 2 won
+        // 2 if the game is a draw
 
         int end = -1;
 
@@ -176,10 +206,13 @@ public class Game extends AppCompatActivity implements GameAdapter.ItemClickList
     }
 
     public int[] getRandomPlay(){
+        // Checks that the game is not already over
         if (end == -1) {
+
+            // Select random plays until it finds a valid play
             while (true) {
                 int i = ThreadLocalRandom.current().nextInt(0, 3);
-                int j = ThreadLocalRandom.current().nextInt(0, 3);;
+                int j = ThreadLocalRandom.current().nextInt(0, 3);
                 if (gameState[i][j] == -1) return new int[]{i, j};
             }
         }
