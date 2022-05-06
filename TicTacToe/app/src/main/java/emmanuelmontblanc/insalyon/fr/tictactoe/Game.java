@@ -26,6 +26,7 @@ public class Game extends AppCompatActivity implements GameAdapter.ItemClickList
     int[][] gameState;
     int end;
     int gameType;
+    int round;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +39,7 @@ public class Game extends AppCompatActivity implements GameAdapter.ItemClickList
         gameState = new int[][] { {-1,-1,-1}, {-1,-1,-1}, {-1,-1,-1}};
         turn = 0;
         end = -1;
+        round = 1;
 
         Intent in  = getIntent();
         gameType = in.getIntExtra("emmanuelmontblanc.insalyon.fr.GAMETYPE", -1);
@@ -101,6 +103,7 @@ public class Game extends AppCompatActivity implements GameAdapter.ItemClickList
                     gameState[col][row] = 1;
                 }
 
+                round += 1;
                 end = checkEnd(col, row, turn);
 
                 if (end == -1) {
@@ -124,19 +127,6 @@ public class Game extends AppCompatActivity implements GameAdapter.ItemClickList
     public int checkEnd(int col, int row, int turn){
 
         int end = -1;
-
-        // Checks draw
-        for(int i = 0; i < 3; i++){
-            for(int j = 0; j < 3; j++){
-                if(gameState[i][j] == -1){
-                    break;
-                }
-
-                if(i == 2 & j == 2){
-                    end = 2;
-                }
-            }
-        }
 
         // Checks col
         for(int i = 0; i < 3; i++){
@@ -178,6 +168,9 @@ public class Game extends AppCompatActivity implements GameAdapter.ItemClickList
                 }
             }
         }
+
+        // Checks draw
+        if (round == 10 & end == -1) end = 2;
 
         return end;
     }
