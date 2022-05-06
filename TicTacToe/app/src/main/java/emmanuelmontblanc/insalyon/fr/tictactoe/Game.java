@@ -7,9 +7,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
@@ -21,6 +23,7 @@ public class Game extends AppCompatActivity implements GameAdapter.ItemClickList
     TextView turnTextView;
     TextView gametypeTextView;
     int turn;
+    int[] gameState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +33,8 @@ public class Game extends AppCompatActivity implements GameAdapter.ItemClickList
         gametypeTextView = (TextView) findViewById(R.id.gametypeTextView);
         turnTextView = (TextView) findViewById(R.id.turnTextView);
 
+        gameState = new int[9];
+        Arrays.fill(gameState, -1);
         turn = 0;
         turnTextView.setText("Player 1");
 
@@ -60,17 +65,23 @@ public class Game extends AppCompatActivity implements GameAdapter.ItemClickList
 
     @Override
     public void onItemClick(View view, int position) {
-//        Log.i("TAG", "You clicked number " + adapter.getItem(position) + ", which is at cell position " + position);
         ImageView caseImageView = view.findViewById(R.id.caseImageView);
 
-        if(turn == 0){
-            caseImageView.setImageResource(R.drawable.cross);
-            turn = 1;
-            turnTextView.setText("Player 2");
+        if(gameState[position] == -1) {
+            if (turn == 0) {
+                caseImageView.setImageResource(R.drawable.cross);
+                gameState[position] = 0;
+                turn = 1;
+                turnTextView.setText("Player 2");
+            } else {
+                caseImageView.setImageResource(R.drawable.circle);
+                gameState[position] = 1;
+                turn = 0;
+                turnTextView.setText("Player 1");
+            }
         } else {
-            caseImageView.setImageResource(R.drawable.circle);
-            turn = 0;
-            turnTextView.setText("Player 1");
+            Toast.makeText(this, "Invalid play !", Toast.LENGTH_SHORT).show();
         }
     }
+
 }
