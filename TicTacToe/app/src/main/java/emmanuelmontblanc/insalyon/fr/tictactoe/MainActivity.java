@@ -22,8 +22,6 @@ public class MainActivity extends AppCompatActivity {
         int crossImg = R.drawable.cross;
         ImageView crossImageView = (ImageView) findViewById(R.id.crossImageView);
         ImageView circleImageView = (ImageView) findViewById(R.id.circleImageView);
-        scaleImg(crossImageView, crossImg);
-        scaleImg(circleImageView, circleImg);
 
 
         Button pvpBtn = (Button) findViewById(R.id.pvpBtn);
@@ -46,22 +44,5 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(showDetailActivity);
             }
         });
-    }
-
-    private void scaleImg(ImageView img, int pic){
-        Display screen = getWindowManager().getDefaultDisplay();
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        BitmapFactory.decodeResource(getResources(), pic, options);
-
-        int imgWidth = options.outWidth;
-        int screenWidth = screen.getWidth();
-
-        int ratio = Math.round( (float)imgWidth / ((float)screenWidth * (float)0.3) );
-        options.inSampleSize = ratio;
-
-        options.inJustDecodeBounds = false;
-        Bitmap scaledImg = BitmapFactory.decodeResource(getResources(), pic, options);
-        img.setImageBitmap(scaledImg);
     }
 }

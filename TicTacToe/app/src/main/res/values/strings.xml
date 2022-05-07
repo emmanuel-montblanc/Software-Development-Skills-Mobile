@@ -6,7 +6,9 @@
 
     <string name="player1">Player 1</string>
     <string name="player2">Player 2</string>
-
+    <string name="ia">IA</string>
+    <string name="draw">Draw game !</string>
+    
     <string name="invalid">Invalid play !</string>
 
 </resources>

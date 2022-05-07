@@ -139,7 +139,10 @@ public class Game extends AppCompatActivity implements GameAdapter.ItemClickList
                     }
                 } else {
                     // if it did end go to victory screen
-                    Toast.makeText(this, "end !" + end, Toast.LENGTH_SHORT).show();
+                    Intent victoryActivity = new Intent(getApplicationContext(), VictoryScreen.class);
+                    victoryActivity.putExtra("emmanuelmontblanc.insalyon.fr.GAMETYPE", gameType);
+                    victoryActivity.putExtra("emmanuelmontblanc.insalyon.fr.END", end);
+                    startActivity(victoryActivity);
                 }
 
             } else {
