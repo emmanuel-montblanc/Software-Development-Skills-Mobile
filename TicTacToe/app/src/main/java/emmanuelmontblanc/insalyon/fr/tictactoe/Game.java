@@ -17,10 +17,10 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class Game extends AppCompatActivity implements GameAdapter.ItemClickListener{
 
-    GameAdapter adapter;
+    GameAdapter gameAdapter;
     TextView turnTextView;
     TextView gameTypeTextView;
-    RecyclerView recyclerView;
+    RecyclerView gameRecyclerView;
 
     int turn;
     int[][] gameState;
@@ -43,12 +43,14 @@ public class Game extends AppCompatActivity implements GameAdapter.ItemClickList
         gameTypeTextView = findViewById(R.id.gametypeTextView);
         turnTextView = findViewById(R.id.roundTextView);
 
+        // Get strings from resources for the textViews
         pvp = getResources().getString(R.string.pvp);
         pvIA = getResources().getString(R.string.pvIA);
         player1 = getResources().getString(R.string.player1);
         player2 = getResources().getString(R.string.player2);
         invalid = getResources().getString(R.string.invalid);
 
+        // Initialize the game variables
         gameState = new int[][] { {-1,-1,-1}, {-1,-1,-1}, {-1,-1,-1}};
         turn = 0;
         end = -1;
@@ -56,10 +58,11 @@ public class Game extends AppCompatActivity implements GameAdapter.ItemClickList
         gameHistory = new int[9];
         Arrays.fill(gameHistory, -1);
 
+        // Get the type of game
         Intent in  = getIntent();
         gameType = in.getIntExtra("emmanuelmontblanc.insalyon.fr.GAMETYPE", -1);
 
-        // Checks the type of game
+        // Checks the type of game and set the turn text view accordingly
         if (gameType > -1){
             if (gameType == 0){
                 gameTypeTextView.setText(pvp);
@@ -72,20 +75,20 @@ public class Game extends AppCompatActivity implements GameAdapter.ItemClickList
             }
         }
 
-        // create data to fill the grid with blank image at first
+        // creates data to fill the grid with blank image at first
         int[] data = new int[9];
         Arrays.fill(data, R.drawable.blank);
 
-        // Instantiate the recyclerView with a grid of 3 columns
-        recyclerView = findViewById(R.id.gameRecyclerView);
-        recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
-        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.HORIZONTAL));
+        // Instantiates the recyclerView with a grid of 3 columns
+        gameRecyclerView = findViewById(R.id.gameRecyclerView);
+        gameRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
+        gameRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+        gameRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.HORIZONTAL));
 
-        // Set the adapter
-        adapter = new GameAdapter(this, data);
-        adapter.setClickListener(this);
-        recyclerView.setAdapter(adapter);
+        // Sets the adapter
+        gameAdapter = new GameAdapter(this, data);
+        gameAdapter.setClickListener(this);
+        gameRecyclerView.setAdapter(gameAdapter);
     }
 
     @Override
@@ -103,9 +106,11 @@ public class Game extends AppCompatActivity implements GameAdapter.ItemClickList
             int[] iaPlay = getRandomPlay();
             if (iaPlay[0] > -1){
 
-                // Get the viewholder corresponding to the case of the chosen play, then the view inside the viewholder
-                GameAdapter.ViewHolder iaViewholder = (GameAdapter.ViewHolder) recyclerView.findViewHolderForAdapterPosition(iaPlay[0]*3+iaPlay[1]);
+                // Get the viewholder corresponding to the case of the chosen play, then gets the view inside the viewholder
+                GameAdapter.ViewHolder iaViewholder = (GameAdapter.ViewHolder) gameRecyclerView.findViewHolderForAdapterPosition(iaPlay[0]*3+iaPlay[1]);
                 View iaView = iaViewholder.itemView.findViewById(R.id.caseImageView);
+
+                // Make the play on the view, with the play randomly chosen
                 makePlay(iaView, iaPlay[0], iaPlay[1]);
             }
         }
