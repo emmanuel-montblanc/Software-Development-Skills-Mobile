@@ -55,7 +55,7 @@ public class VictoryScreen extends AppCompatActivity {
         });
 
         // Trims gameHistory, so it is the right length
-        int l = 4;
+        int l = 9;
         for(int i = 4; i< gameHistory.length; i++){
             if(gameHistory[i] == -1){
                 l = i;
