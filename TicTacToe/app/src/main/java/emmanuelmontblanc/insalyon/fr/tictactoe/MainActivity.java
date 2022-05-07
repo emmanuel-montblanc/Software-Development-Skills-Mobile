@@ -1,15 +1,12 @@
 package emmanuelmontblanc.insalyon.fr.tictactoe;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.view.Display;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -18,30 +15,26 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        int circleImg = R.drawable.circle;
-        int crossImg = R.drawable.cross;
-        ImageView crossImageView = (ImageView) findViewById(R.id.crossImageView);
-        ImageView circleImageView = (ImageView) findViewById(R.id.circleImageView);
-
-
-        Button pvpBtn = (Button) findViewById(R.id.pvpBtn);
-        Button pviaBtn = (Button) findViewById(R.id.pviaBtn);
+        // Button for choosing the type of game
+        // Start the game activity when clicked
+        Button pvpBtn = findViewById(R.id.pvpBtn);
+        Button pviaBtn = findViewById(R.id.pviaBtn);
 
         pvpBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent showDetailActivity = new Intent(getApplicationContext(), Game.class);
-                showDetailActivity.putExtra("emmanuelmontblanc.insalyon.fr.GAMETYPE", 0);
-                startActivity(showDetailActivity);
+                Intent gameActivity = new Intent(getApplicationContext(), Game.class);
+                gameActivity.putExtra("emmanuelmontblanc.insalyon.fr.GAMETYPE", 0);
+                startActivity(gameActivity);
             }
         });
 
         pviaBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent showDetailActivity = new Intent(getApplicationContext(), Game.class);
-                showDetailActivity.putExtra("emmanuelmontblanc.insalyon.fr.GAMETYPE", 1);
-                startActivity(showDetailActivity);
+                Intent gameActivity = new Intent(getApplicationContext(), Game.class);
+                gameActivity.putExtra("emmanuelmontblanc.insalyon.fr.GAMETYPE", 1);
+                startActivity(gameActivity);
             }
         });
     }
