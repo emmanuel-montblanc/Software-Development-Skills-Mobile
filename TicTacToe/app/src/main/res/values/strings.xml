@@ -11,4 +11,6 @@
     
     <string name="invalid">Invalid play !</string>
 
+    <string name="mainMenu">Main menu</string>
+
 </resources>
