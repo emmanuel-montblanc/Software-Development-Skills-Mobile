@@ -27,6 +27,7 @@ public class Game extends AppCompatActivity implements GameAdapter.ItemClickList
     int end;
     int gameType;
     int round;
+    int[] gameHistory;
 
     String pvp;
     String pvIA;
@@ -51,7 +52,8 @@ public class Game extends AppCompatActivity implements GameAdapter.ItemClickList
         gameState = new int[][] { {-1,-1,-1}, {-1,-1,-1}, {-1,-1,-1}};
         turn = 0;
         end = -1;
-        round = 1;
+        round = 0;
+        gameHistory = new int[9];
 
         Intent in  = getIntent();
         gameType = in.getIntExtra("emmanuelmontblanc.insalyon.fr.GAMETYPE", -1);
@@ -125,6 +127,7 @@ public class Game extends AppCompatActivity implements GameAdapter.ItemClickList
                 }
 
                 // After the play, increase the round counter and check if the game ended
+                gameHistory[round] = col*3 + row;
                 round += 1;
                 end = checkEnd(col, row, turn);
 
@@ -142,6 +145,7 @@ public class Game extends AppCompatActivity implements GameAdapter.ItemClickList
                     Intent victoryActivity = new Intent(getApplicationContext(), VictoryScreen.class);
                     victoryActivity.putExtra("emmanuelmontblanc.insalyon.fr.GAMETYPE", gameType);
                     victoryActivity.putExtra("emmanuelmontblanc.insalyon.fr.END", end);
+                    victoryActivity.putExtra("emmanuelmontblanc.insalyon.fr.GAMEHISTORY", gameHistory);
                     startActivity(victoryActivity);
                 }
 
@@ -203,7 +207,7 @@ public class Game extends AppCompatActivity implements GameAdapter.ItemClickList
         }
 
         // Checks draw
-        if (round == 10 & end == -1) end = 2;
+        if (round == 9 & end == -1) end = 2;
 
         return end;
     }

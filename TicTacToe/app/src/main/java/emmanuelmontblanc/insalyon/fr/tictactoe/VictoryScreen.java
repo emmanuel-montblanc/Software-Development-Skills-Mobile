@@ -18,6 +18,7 @@ public class VictoryScreen extends AppCompatActivity {
         Intent in  = getIntent();
         int end = in.getIntExtra("emmanuelmontblanc.insalyon.fr.END", -1);
         int gameType = in.getIntExtra("emmanuelmontblanc.insalyon.fr.GAMETYPE", -1);
+        int[] gameHistory = in.getIntArrayExtra("emmanuelmontblanc.insalyon.fr.GAMEHISTORY");
 
         // Display the winner of the game on the textView
         TextView winnerTextView = findViewById(R.id.winnerTextView);
