@@ -1,6 +1,10 @@
 package emmanuelmontblanc.insalyon.fr.tictactoe;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -49,5 +53,24 @@ public class VictoryScreen extends AppCompatActivity {
                 startActivity(i);
             }
         });
+
+        int l = 4;
+        for(int i = 4; i< gameHistory.length; i++){
+            if(gameHistory[i] == -1){
+                l = i;
+                break;
+            }
+        }
+        int[] gameHistoryTrimed = new int[l];
+        for(int i =0; i< l; i++){
+            gameHistoryTrimed[i] = gameHistory[i];
+        }
+
+        RecyclerView historyRecyclerView = findViewById(R.id.historyRecyclerView);
+        historyRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        historyRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+
+        HistoryAdapter historyAdapter = new HistoryAdapter(this, gameHistoryTrimed, gameType);
+        historyRecyclerView.setAdapter(historyAdapter);
     }
 }

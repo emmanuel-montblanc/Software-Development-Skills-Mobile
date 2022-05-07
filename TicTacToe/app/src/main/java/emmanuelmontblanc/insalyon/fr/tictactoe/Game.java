@@ -41,7 +41,7 @@ public class Game extends AppCompatActivity implements GameAdapter.ItemClickList
         setContentView(R.layout.activity_game);
 
         gameTypeTextView = findViewById(R.id.gametypeTextView);
-        turnTextView = findViewById(R.id.turnTextView);
+        turnTextView = findViewById(R.id.roundTextView);
 
         pvp = getResources().getString(R.string.pvp);
         pvIA = getResources().getString(R.string.pvIA);
@@ -54,6 +54,7 @@ public class Game extends AppCompatActivity implements GameAdapter.ItemClickList
         end = -1;
         round = 0;
         gameHistory = new int[9];
+        Arrays.fill(gameHistory, -1);
 
         Intent in  = getIntent();
         gameType = in.getIntExtra("emmanuelmontblanc.insalyon.fr.GAMETYPE", -1);
