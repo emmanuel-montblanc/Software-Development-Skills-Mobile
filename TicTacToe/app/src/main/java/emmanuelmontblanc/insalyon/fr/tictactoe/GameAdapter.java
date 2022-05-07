@@ -21,7 +21,7 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.ViewHolder> {
         this.img = img;
     }
 
-    // inflates the cell layout from xml when needed
+    // inflates the cell layout from xml
     @Override
     @NonNull
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -29,7 +29,6 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.ViewHolder> {
         return new ViewHolder(view);
     }
 
-    // binds the data to the TextView in each cell
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.caseImageView.setImageResource(img[position]);
@@ -58,17 +57,12 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.ViewHolder> {
         }
     }
 
-    // convenience method for getting data at click position
-    int getItem(int id) {
-        return img[id];
-    }
-
-    // allows clicks events to be caught
+    // Allows clicks events to be caught
     void setClickListener(ItemClickListener itemClickListener) {
         this.mClickListener = itemClickListener;
     }
 
-    // parent activity will implement this method to respond to click events
+    // Allows us to define the onClick method in the parent activity
     public interface ItemClickListener {
         void onItemClick(View view, int position);
     }
