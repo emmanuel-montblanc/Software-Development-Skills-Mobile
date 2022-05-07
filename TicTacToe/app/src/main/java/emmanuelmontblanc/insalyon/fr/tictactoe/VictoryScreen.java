@@ -1,16 +1,15 @@
 package emmanuelmontblanc.insalyon.fr.tictactoe;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class VictoryScreen extends AppCompatActivity {
 
@@ -19,6 +18,7 @@ public class VictoryScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_victory_screen);
 
+        // Get the end, gameType and gameHistory from the extras
         Intent in  = getIntent();
         int end = in.getIntExtra("emmanuelmontblanc.insalyon.fr.END", -1);
         int gameType = in.getIntExtra("emmanuelmontblanc.insalyon.fr.GAMETYPE", -1);
@@ -54,6 +54,7 @@ public class VictoryScreen extends AppCompatActivity {
             }
         });
 
+        // Trims gameHistory, so it is the right length
         int l = 4;
         for(int i = 4; i< gameHistory.length; i++){
             if(gameHistory[i] == -1){
@@ -61,16 +62,16 @@ public class VictoryScreen extends AppCompatActivity {
                 break;
             }
         }
-        int[] gameHistoryTrimed = new int[l];
-        for(int i =0; i< l; i++){
-            gameHistoryTrimed[i] = gameHistory[i];
-        }
+        int[] gameHistoryTrimmed = new int[l];
+        System.arraycopy(gameHistory, 0, gameHistoryTrimmed, 0, l);
 
+        // Instantiate the recycler view
         RecyclerView historyRecyclerView = findViewById(R.id.historyRecyclerView);
         historyRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         historyRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
 
-        HistoryAdapter historyAdapter = new HistoryAdapter(this, gameHistoryTrimed, gameType);
+        // Sets the adapter
+        HistoryAdapter historyAdapter = new HistoryAdapter(this, gameHistoryTrimmed, gameType);
         historyRecyclerView.setAdapter(historyAdapter);
     }
 }
